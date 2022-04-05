@@ -21,7 +21,6 @@ class RootHomeScreen extends StatefulWidget {
 }
 
 class _RootHomeScreenState extends State<RootHomeScreen> {
-
   AuthServices _authServices = AuthServices();
 
   UserServices _userServices = UserServices();
@@ -59,120 +58,124 @@ class _RootHomeScreenState extends State<RootHomeScreen> {
 
   Future<void> _addTask() async {
     return showModalBottomSheet(
-      context: context,
-                isScrollControlled: true, // when we click on edit text keybord will appear and that rectangular box will scroll up a little 
-                isDismissible: false,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20))),
-                builder: (context) {
-                  return Container(
-                    child: SingleChildScrollView(
-                      child: Column(
+        context: context,
+        isScrollControlled:
+            true, // when we click on edit text keybord will appear and that rectangular box will scroll up a little
+        isDismissible: false,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+        builder: (context) {
+          return Container(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const SizedBox(
-                            height: 20,
+                          const Text(
+                            "Add A Task",
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
-                          Container(
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Add A Task",
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  CircleAvatar(
-                                    child: IconButton(
-                                        onPressed: () {
-                                           Navigator.of(context).pop(); //on clicking the rectangular box should close
-                                          _taskNameController.clear(); // and the edit text should be clear
-                                        },
-                                        icon: const Icon(Icons.close)),
-                                  )
-                                ],
-                              ),
-                              margin: const EdgeInsets.symmetric(horizontal: 15) 
-                              ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            child: TextField(
-                                controller: _taskNameController,
-                                decoration: const InputDecoration(
-                                    hintText: "Enter Task Name")
-                                    ),
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      _taskNameController.clear();
-                                    },
-                                    child: const Text("CANCEL")),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                TextButton(
-                                    onPressed: () async {
-                                      DateTime dateTime = DateTime.now();
-                                      String taskName = _taskNameController.text.toString().trim();
-                                      String dateOfUpload = DateFormat("dd/MM/yyyy")
-                                          .format(dateTime);
-                                      String timeOfUpload =
-                                          DateFormat("hh:mm").format(dateTime);
-                                      int uploadMilliSecond =
-                                          dateTime.millisecondsSinceEpoch;
-                                         // print('The Milisecond is: $uploadMilliSecond');
-                                      String taskId =
-                                          uploadMilliSecond.toString();
-                                         // print('\nThe Task Id is: $taskId');
-                                      Task task = Task(taskId: taskId, taskName: taskName, dateOfUpload: dateOfUpload, timeOfUpload: timeOfUpload, uploadMilliSecond: uploadMilliSecond);
-                                      String uid = widget.uid;
-
-                                      await _addTaskDataToDatabase(uid, task);
-                                     
-                                      Navigator.of(context).pop();
-                                      _taskNameController.clear();
-                                    },
-                                    child: const Text("SUBMIT")),
-                              ],
-                              mainAxisAlignment: MainAxisAlignment.end,
-                            ),
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
+                          CircleAvatar(
+                            child: IconButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pop(); //on clicking the rectangular box should close
+                                  _taskNameController
+                                      .clear(); // and the edit text should be clear
+                                },
+                                icon: const Icon(Icons.close)),
                           )
                         ],
                       ),
+                      margin: const EdgeInsets.symmetric(horizontal: 15)),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: TextField(
+                        controller: _taskNameController,
+                        decoration:
+                            const InputDecoration(hintText: "Enter Task Name")),
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              _taskNameController.clear();
+                            },
+                            child: const Text("CANCEL")),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              DateTime dateTime = DateTime.now();
+                              String taskName =
+                                  _taskNameController.text.toString().trim();
+                              String dateOfUpload =
+                                  DateFormat("dd/MM/yyyy").format(dateTime);
+                              String timeOfUpload =
+                                  DateFormat("hh:mm").format(dateTime);
+                              int uploadMilliSecond =
+                                  dateTime.millisecondsSinceEpoch;
+                              // print('The Milisecond is: $uploadMilliSecond');
+                              String taskId = uploadMilliSecond.toString();
+                              // print('\nThe Task Id is: $taskId');
+                              Task task = Task(
+                                  taskId: taskId,
+                                  taskName: taskName,
+                                  dateOfUpload: dateOfUpload,
+                                  timeOfUpload: timeOfUpload,
+                                  uploadMilliSecond: uploadMilliSecond);
+                              String uid = widget.uid;
+
+                              await _addTaskDataToDatabase(uid, task);
+
+                              Navigator.of(context).pop();
+                              _taskNameController.clear();
+                            },
+                            child: const Text("SUBMIT")),
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.end,
                     ),
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            topLeft: Radius.circular(20))),
-                    width: MediaQuery.of(context).size.width,
-                    height: 300 + MediaQuery.of(context).viewInsets.bottom,
-            );
-       });
+                    margin: const EdgeInsets.symmetric(horizontal: 15),
+                  )
+                ],
+              ),
+            ),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20))),
+            width: MediaQuery.of(context).size.width,
+            height: 300 + MediaQuery.of(context).viewInsets.bottom,
+          );
+        });
   }
 
   Future<void> _logOut() async {
     await _authServices.logOut();
-  Fluttertoast.showToast(msg: "Logged out successfully");
-  Timer(Duration(milliseconds: 350), () {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
-  });
+    Fluttertoast.showToast(msg: "Logged out successfully");
+    Timer(Duration(milliseconds: 350), () {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()));
+    });
   }
 
- @override
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -189,8 +192,9 @@ class _RootHomeScreenState extends State<RootHomeScreen> {
         actions: [
           IconButton(
               onPressed: () {
-                 _addTask();
-              }, icon: Icon(Icons.add, color: Colors.white)),
+                _addTask();
+              },
+              icon: Icon(Icons.add, color: Colors.white)),
           IconButton(
               onPressed: () async {
                 await _logOut();
@@ -198,121 +202,165 @@ class _RootHomeScreenState extends State<RootHomeScreen> {
               icon: Icon(Icons.exit_to_app, color: Colors.white))
         ],
         title: StreamBuilder(
-          stream: _userDataStream,
-          builder: (context,AsyncSnapshot<DocumentSnapshot> snapshot) {
-            return Text(
-              snapshot == null ? "" : snapshot.data == null ? "" :  "Hello ${(snapshot.data!.data() as Map<String, dynamic>)["userName"]}",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-            );
-          }
-        ),
+            stream: _userDataStream,
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              return Text(
+                snapshot == null
+                    ? ""
+                    : snapshot.data == null
+                        ? ""
+                        : "Hello ${(snapshot.data!.data() as Map<String, dynamic>)["userName"]}",
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+              );
+            }),
       ),
       body: StreamBuilder(
-        stream: _taskDataStream,
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          return snapshot == null ? Center(child: CircularProgressIndicator(),)  : snapshot.data == null ? Center(child: CircularProgressIndicator(),) : snapshot.data!.docs.length == 0 ? Center(child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.delete, size: screenWidth / 5.175),
-              SizedBox(
-                height: screenWidth / 27.6,
-              ),
-              Text("No Task Added Yet", textAlign: TextAlign.center, style: TextStyle(
-                fontSize: screenWidth / 27.6,
-                fontWeight: FontWeight.bold
-              ),)
-          ],)) : ListView(
-            children: List.generate(
-              snapshot.data!.docs.length,
-              (index) => IndividualTaskBuilder(
-                screenWidth: screenWidth,
-                taskDate: (snapshot.data!.docs[index].data() as Map)["dateOfUpload"],
-                taskName: (snapshot.data!.docs[index].data() as Map)["taskName"],
-                taskTime: (snapshot.data!.docs[index].data() as Map)["timeOfUpload"],
-                onDeletePressed: () {
-                   showModalBottomSheet(
-                                                          context: context,
-                                                          isDismissible: false,
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius.only(
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          20),
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          20))),
-                                                          builder: (context) {
-                                                            return Container(
-                                                                child:Column(
-                                                                          children: [
-                                                                            Expanded(child: Container()),
-                                                                            Container(
-                                                                              child: Text(
-                                                                                "Are you sure\nYou want to delete this task?",
-                                                                                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                                                                                textAlign: TextAlign.center,
-                                                                              ),
-                                                                              margin: EdgeInsets.symmetric(horizontal: 15),
-                                                                            ),
-                                                                            SizedBox(
-                                                                              height: 15,
-                                                                            ),
-                                                                            Row(
-                                                                              children: [
-                                                                                ElevatedButton(
-                                                                                    style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-                                                                                    onPressed: () {
-                                                                                      Navigator.of(context).pop();
-                                                                                    },
-                                                                                    child: Text("No")),
-                                                                                SizedBox(
-                                                                                  width: 10,
-                                                                                ),
-                                                                                ElevatedButton(
-                                                                                    style: ButtonStyle(shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
-                                                                                    onPressed: () async {
-                                                                                      String taskId = (snapshot.data!.docs[index].data() as Map) ["taskId"];
-                                                                                      await _deleteTask(taskId, widget.uid);
+          stream: _taskDataStream,
+          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            return snapshot == null
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : snapshot.data == null
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : snapshot.data!.docs.length == 0
+                        ? Center(
+                            child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.delete, size: screenWidth / 5.175),
+                              SizedBox(
+                                height: screenWidth / 27.6,
+                              ),
+                              Text(
+                                "No Task Added Yet",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: screenWidth / 27.6,
+                                    fontWeight: FontWeight.bold),
+                              )
+                            ],
+                          ))
+                        : ListView(
+                            children: List.generate(
+                              snapshot.data!.docs.length,
+                              (index) => IndividualTaskBuilder(
+                                screenWidth: screenWidth,
+                                taskDate: (snapshot.data!.docs[index].data()
+                                    as Map)["dateOfUpload"],
+                                taskName: (snapshot.data!.docs[index].data()
+                                    as Map)["taskName"],
+                                taskTime: (snapshot.data!.docs[index].data()
+                                    as Map)["timeOfUpload"],
+                                onDeletePressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      isDismissible: false,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(20),
+                                              topLeft: Radius.circular(20))),
+                                      builder: (context) {
+                                        return Container(
+                                            child: Column(
+                                              children: [
+                                                Expanded(child: Container()),
+                                                Container(
+                                                  child: Text(
+                                                    "Are you sure\nYou want to delete this task?",
+                                                    style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 15),
+                                                ),
+                                                SizedBox(
+                                                  height: 15,
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    ElevatedButton(
+                                                        style: ButtonStyle(
+                                                            shape: MaterialStateProperty.all(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            30)))),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child: Text("No")),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    ElevatedButton(
+                                                        style: ButtonStyle(
+                                                            shape: MaterialStateProperty.all(
+                                                                RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            30)))),
+                                                        onPressed: () async {
+                                                          String taskId = (snapshot
+                                                                  .data!
+                                                                  .docs[index]
+                                                                  .data()
+                                                              as Map)["taskId"];
+                                                          await _deleteTask(
+                                                              taskId,
+                                                              widget.uid);
 
-                                                                                      Fluttertoast.showToast(msg: "Task deleted successfully");
-                                                                                      Timer(Duration(milliseconds: 350), () {
-                                                                                        Navigator.of(context).pop();
-                                                                                      });
-                                                                                    },
-                                                                                    child: Text("Yes")),
-                                                                              ],
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                            ),
-                                                                            Expanded(
-                                                                                child: Container(),
-                                                                                flex: 2),
-                                                                          ],
-                                                                        ),
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.only(
-                                                                        topLeft:
-                                                                            Radius.circular(
-                                                                                20),
-                                                                        topRight:
-                                                                            Radius.circular(
-                                                                                20))),
-                                                                height: 250,
-                                                                width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width);
+                                                          Fluttertoast.showToast(
+                                                              msg:
+                                                                  "Task deleted successfully");
+                                                          Timer(
+                                                              Duration(
+                                                                  milliseconds:
+                                                                      350), () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
                                                           });
-                },
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => ViewIndividualTask()));
-                },
-                index: index,
-              ),
-            ),
-          );
-        }
-      ),
+                                                        },
+                                                        child: Text("Yes")),
+                                                  ],
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                ),
+                                                Expanded(
+                                                    child: Container(),
+                                                    flex: 2),
+                                              ],
+                                            ),
+                                            decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.only(
+                                                    topLeft:
+                                                        Radius.circular(20),
+                                                    topRight:
+                                                        Radius.circular(20))),
+                                            height: 250,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width);
+                                      });
+                                },
+                                onPressed: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                          ViewIndividualTask()));
+                                },
+                                index: index,
+                              ),
+                            ),
+                          );
+          }),
     );
   }
 }
@@ -393,8 +441,7 @@ class IndividualTaskBuilder extends StatelessWidget {
                   subtitle: Text(
                     "$taskName",
                     style: TextStyle(fontSize: screenWidth / 31.85),
-                  )
-                  ),
+                  )),
               ListTile(
                   leading: Container(
                     alignment: Alignment.center,
@@ -470,8 +517,7 @@ class IndividualTaskBuilder extends StatelessWidget {
               left: screenWidth / 20.7,
               right: screenWidth / 20.7,
               bottom: screenWidth / 20.7,
-              top: index == 0 ? screenWidth / 20.7 : 0)
-              ),
+              top: index == 0 ? screenWidth / 20.7 : 0)),
     );
   }
 }
