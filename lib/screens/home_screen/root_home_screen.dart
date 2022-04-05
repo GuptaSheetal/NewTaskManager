@@ -122,30 +122,41 @@ class _RootHomeScreenState extends State<RootHomeScreen> {
                         ),
                         TextButton(
                             onPressed: () async {
-                              DateTime dateTime = DateTime.now();
-                              String taskName =
-                                  _taskNameController.text.toString().trim();
-                              String dateOfUpload =
-                                  DateFormat("dd/MM/yyyy").format(dateTime);
-                              String timeOfUpload =
-                                  DateFormat("hh:mm").format(dateTime);
-                              int uploadMilliSecond =
-                                  dateTime.millisecondsSinceEpoch;
-                              // print('The Milisecond is: $uploadMilliSecond');
-                              String taskId = uploadMilliSecond.toString();
-                              // print('\nThe Task Id is: $taskId');
-                              Task task = Task(
-                                  taskId: taskId,
-                                  taskName: taskName,
-                                  dateOfUpload: dateOfUpload,
-                                  timeOfUpload: timeOfUpload,
-                                  uploadMilliSecond: uploadMilliSecond);
-                              String uid = widget.uid;
+                              if (_taskNameController.text
+                                  .toString()
+                                  .trim()
+                                  .isEmpty) {
+                                Fluttertoast.showToast(
+                                    msg: "Task Name is Required");
+                              } else {
+                                DateTime dateTime = DateTime.now();
+                                String taskName =
+                                    _taskNameController.text.toString().trim();
+                                String dateOfUpload =
+                                    DateFormat("dd/MM/yyyy").format(dateTime);
+                                String timeOfUpload =
+                                    DateFormat("HH:mm").format(dateTime);
+                                int uploadMilliSecond =
+                                    dateTime.millisecondsSinceEpoch;
+                                // print('The Milisecond is: $uploadMilliSecond');
+                                String taskId = uploadMilliSecond.toString();
+                                // print('\nThe Task Id is: $taskId');
+                                Task task = Task(
+                                    taskId: taskId,
+                                    taskName: taskName,
+                                    dateOfUpload: dateOfUpload,
+                                    timeOfUpload: timeOfUpload,
+                                    uploadMilliSecond: uploadMilliSecond);
+                                String uid = widget.uid;
 
-                              await _addTaskDataToDatabase(uid, task);
+                                await _addTaskDataToDatabase(uid, task);
 
-                              Navigator.of(context).pop();
-                              _taskNameController.clear();
+                                Fluttertoast.showToast(
+                                    msg: "Task Added Successfully");
+
+                                Navigator.of(context).pop();
+                                _taskNameController.clear();
+                              }
                             },
                             child: const Text("SUBMIT")),
                       ],
@@ -352,9 +363,13 @@ class _RootHomeScreenState extends State<RootHomeScreen> {
                                       });
                                 },
                                 onPressed: () {
+                                  String taskId = (snapshot.data!.docs[index]
+                                      .data() as Map)["taskId"];
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          ViewIndividualTask()));
+                                      builder: (context) => ViewIndividualTask(
+                                            uid: widget.uid,
+                                            taskId: taskId,
+                                          )));
                                 },
                                 index: index,
                               ),
